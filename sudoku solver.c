@@ -17,11 +17,11 @@ void gotoxy(int x,int y)
 	SetConsoleCursorPosition(h,c);
 }
 
-int m[9][9],t=0;char caar[10][10];
+int m[9][9];char caar[9][9];
 
 int box(int v, int x, int y)  //to check the small 3*3 boxes
 {   int k;
-	x=((x-1)/3)*3+1; y=((y-1)/3)*3+1;
+	x=(x/3)*3; y=(y/3)*3;
 	int X=x+3,Y=y+3;
 	for(;x<X;x++)
 		for(k=y;k<Y;k++)  //i had developed tools 1,3,4V&H at the time of writing this. my box code was: for(;x<X;x++)for(;y<Y;y++) if(v==m[x][y]) return 1; the code as a whole was fine but later i found that tool1 wasn't running as it should have been and after much labor found that it's sth. in the box fuction.Only after much labor again could i fix it. Lesson learned: don't compromise the code for aesthetics.I don't wanna do that :'(.
@@ -46,14 +46,14 @@ void tool1()
 	{	//clrscr();
 		s=0;
 		int x,y,v,count,V;
-		for(x=1;x<=9;x++)
+		for(x=0;x<9;x++)
 		{ 
-			for(y=1;y<=9;y++)
+			for(y=0;y<9;y++)
 			{    count=0;
 			if(m[x][y]==0)
 			{	for(v=1;v<=9;v++)
 				{   int flag=0;
-				for(i=1;i<=9;i++)
+				for(i=0;i<9;i++)
 				{	if(v==m[x][i]||v==m[i][y]||box(v,x,y)==1)
 					{flag=1;break; }	}			
 				if(flag==1){count++; }
@@ -78,9 +78,9 @@ for(h=0;h<=2;h++)// Going in the order:   0 3 6
 	{   a=0;
 	for(v=1;v<=9;v++)
 	{	flag=0;
-	for(x=1+3*h;x<4+3*h;x++)
+	for(x=3*h;x<3*h+3;x++)
 	{
-		for(y=1+3*k;y<4+3*k;y++)
+		for(y=3*k;y<3*k+3;y++)
 		{
 			if(m[x][y]==v)flag=1;
 		}
@@ -97,13 +97,13 @@ for(h=0;h<=2;h++)
 	{
 		for(a=0;a<grp_a[3*h+k];a++)
 		{ v=arr[3*h+k][a]; c0unt=0;count=0;
-		for(x=1+3*h;x<4+3*h;x++)
+		for(x=3*h;x<3*h+3;x++)
 		{
-			for(y=1+3*k;y<4+3*k;y++)
+			for(y=3*k;y<3*k+3;y++)
 			{   flag=0;
 			if(m[x][y]==0)  { 
 				c0unt++;
-				for(i=1;i<=9;i++)
+				for(i=0;i<9;i++)
 					if(v==m[x][i]||v==m[i][y])
 						flag=1;
 				if(flag)count++;
@@ -120,14 +120,14 @@ for(h=0;h<=2;h++)
 
 void tool4V()
 {  int s=1; int i,j;
-int x,y,V[10][10],a,v,flag,V_a[10];//V[X][indices or "a"]=no.s the row X doesn't have	
+int x,y,V[9][9],a,v,flag,V_a[9];//V[X][indices or "a"]=no.s the row X doesn't have	
 while(s)
 {	s=0;
-for(x=1;x<=9;x++)
+for(x=0;x<9;x++)
 {a=0;	
 for(v=1;v<=9;v++)
 {flag=0;
-for(y=1;y<=9;y++)
+for(y=0;y<9;y++)
 {
 	if(m[x][y]==v)
 		flag=1;
@@ -138,19 +138,19 @@ V_a[x]=a;
 }	
 
 int X,Y,count,c0unt;
-for(x=1;x<=9;x++)
+for(x=0;x<9;x++)
 {	c0unt=0;
-for(y=1;y<=9;y++)
+for(y=0;y<9;y++)
 	if(m[x][y]==0)
 		c0unt++;
 for(a=0;a<V_a[x];a++)
 {   count=0;
 v=V[x][a]; 
-for(y=1;y<=9;y++)
+for(y=0;y<9;y++)
 {   flag=0;
 	if(m[x][y]==0)
 {   if(box(v,x,y)==1)flag=1;
-	for(i=1;i<=9;i++)
+	for(i=0;i<9;i++)
 	{if(m[i][y]==v){flag=1;/*system("cls");screen();board();printf("&%d %d %d&",i,y,v);/**/}}
 	if(flag==1){count++;/*printf("(%d %d) %d ",x,y,v);getch();/**/}
 	else{X=x;Y=y;} }
@@ -166,14 +166,14 @@ if(count==c0unt-1)
 
 void tool4H()
 {  int s=1; int i,j;
-int x,y,V[10][10],a,v,flag,V_a[10];//V[y][indices or "a"]=no.s the column y doesn't have	
+int x,y,V[9][9],a,v,flag,V_a[9];//V[y][indices or "a"]=no.s the column y doesn't have	
 while(s)
 {	s=0;
-for(y=1;y<=9;y++)
+for(y=0;y<9;y++)
 {a=0;	
 for(v=1;v<=9;v++)
 {flag=0;
-for(x=1;x<=9;x++)
+for(x=0;x<9;x++)
 {
 	if(m[x][y]==v)
 		flag=1;
@@ -184,19 +184,19 @@ V_a[y]=a;
 }	
 
 int X,Y,count,c0unt;
-for(y=1;y<=9;y++)
+for(y=0;y<9;y++)
 {	c0unt=0;
-for(x=1;x<=9;x++)
+for(x=0;x<9;x++)
 	if(m[x][y]==0)
 		c0unt++;
 for(a=0;a<V_a[y];a++)
 {   count=0;
 v=V[y][a]; 
-for(x=1;x<=9;x++)
+for(x=0;x<9;x++)
 {   flag=0;
 	if(m[x][y]==0)
 {   if(box(v,x,y)==1)flag=1;
-	for(i=1;i<=9;i++)
+	for(i=0;i<9;i++)
 	{if(m[x][i]==v){flag=1;/*system("cls");screen();board();printf("&%d %d %d&",i,y,v);/**/}}
 	if(flag==1){count++;/*printf("(%d %d) %d ",x,y,v);getch();/**/}
 	else{X=x;Y=y;} }
@@ -229,16 +229,16 @@ main()
 }
 void load()
 {   FILE *a;int i,j;
-int c=1,ar[81];char ch;
+int c=0,ar[81];char ch;
 a=fopen("sudoku.txt","r"); 
-for(i=1;i<=81;i++)
+for(i=0;i<81;i++)
 {
 	ch=fgetc(a);
 	ar[i]=ch-48;
 }
-for(i=1;i<=9;i++)
+for(i=0;i<9;i++)
 {
-	for(j=1;j<=9;j++)
+	for(j=0;j<9;j++)
 	{
 		m[i][j]=ar[c];
 		caar[i][j]=ar[c]+48;
@@ -259,16 +259,16 @@ void screen()
 void board()
 {
 	int i,j;
-	for(i=1;i<=9;i++)
+	for(i=0;i<9;i++)
 	{
-		for(j=1;j<=9;j++)
+		for(j=0;j<9;j++)
 		{
 			if(!check(i,j))
-			{ gotoxy(4*i,2*j+1);
+			{ gotoxy(4*i+4,2*j+3);
 			printf(":%d:",m[i][j]);
 			}
 			else
-			{ gotoxy(4*i+1,2*j+1);
+			{ gotoxy(4*i+5,2*j+3);
 			m[i][j]==0?printf(" "):printf("%d",m[i][j]);
 			}
 		}
@@ -286,8 +286,8 @@ int check(int x,int y)//for putting : : around default ones
 int score()
 {   int i,j;
 	int score=0;
-	for(i=1;i<=9;i++)
-		for(j=1;j<=9;j++)
+	for(i=0;i<9;i++)
+		for(j=0;j<9;j++)
 			if(m[i][j]!=0) score++;
 	return score;
 }
