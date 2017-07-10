@@ -18,6 +18,7 @@ void gotoxy(int x,int y)
 }
 
 int m[9][9];char caar[9][9];
+int aa[10],ai=0;
 
 int box(int v, int x, int y,int M[][9])  //to check the small 3*3 boxes
 {  	int k;
@@ -32,14 +33,15 @@ int box(int v, int x, int y,int M[][9])  //to check the small 3*3 boxes
 void screen();
 void board(int [][9]);
 void load();
-void player(int M[][9]);
-void tool1(int M[][9]);//traditional: checks if a cell can take only one number(can't take any of the other 8 that is). if yes,puts that number in it 
-void tool3(int M[][9]);//box by box: checks which all elements a box needs and if only one cell can take a number, puts it theres
-void tool4V(int M[][9]);void tool4H(int M[][9]);//line by line: checks which all elements a line needs and if only one cell can take a number, puts it there
+void player(int [][9]);
+void tool1(int [][9], int tol);//traditional: checks if a cell can take only one number(can't take any of the other 8 that is). if yes,puts that number in it 
+void tool3(int [][9]);//box by box: checks which all elements a box needs and if only one cell can take a number, puts it theres
+void tool4V(int [][9]);void tool4H(int M[][9]);//line by line: checks which all elements a line needs and if only one cell can take a number, puts it there
 //I can't help but think these three tools as dimensions which seldom, if at all, overlap. And they complement each other so well! 
-int score(int M[][9]);
+int score(int [][9]);
 int  check(int ,int);
-void tool1(int M[][9])
+void tne();
+void tool1(int M[][9], int tol)
 {  	int i,j;
 	int s=1;
 	while(s)
@@ -59,8 +61,10 @@ void tool1(int M[][9])
 				if(flag==1){count++; }
 				else V=v;
 				}
-			if(count==8)
-			{M[x][y]=V;s=1;}//if(count==6)printf("%d%d",x,y);
+			if(tol==1&&count==8)//9-tol=8
+			{M[x][y]=V;s=1;}
+			 else if(tol==2&&count==9-tol)
+			 { aa[ai] = x*10+y;ai++;}
 		    }
 			}
 		}
@@ -220,18 +224,63 @@ void player(int M[][9])
 {  screen();board(M);getch();int prevscore,Score;
 do{
 	prevscore=Score;
-	tool1(M);
+	tool1(M,1);
 	tool3(M);
 	tool4H(M);
 	tool4V(M);
-	Score=score(M);}while(Score!=prevscore&&Score!=81);board(M);printf("\nScore=%d",Score);getch();
+	Score=score(M);}while(Score!=prevscore&&Score!=81);
+	board(M);printf("\nScore=%d",Score);getch();
 }
+
+void tne()  //trial and error
+{
+int i,j;
+int t,x,y;
+tool1(m,2);
+int s=0;
+while(s<ai)
+{
+int M[9][9]; for(i=0;i<9;i++)for(j=0;j<9;j++)M[i][j]=m[i][j];
+t=aa[s];
+x=t/10;y=t%10;
+int a[2];
+t=0;int v,i;
+for(v=1;v<=9;v++)
+{
+	int flag=0;
+	for(i=1;i<=9;i++)
+	{	if(v==m[x][i]||v==m[i][y]||box(v,x,y,M)==1)
+	{flag=1;break; }	}			
+	if(flag!=1){a[t]=v;t++;}
+}
+
+M[x][y]=a[1];
+player(M);
+
+if(score(M)!=81)
+ { 
+ for(i=0;i<9;i++)for(j=0;j<9;j++)M[i][j]=m[i][j];
+ M[x][y]=a[0];
+ player(M);
+ }
+
+if(score(M)==81)
+return;
+
+s++;
+}
+}
+
 
 main()
 {   //clrscr();
 	load();
 	player(m);
+	if(score(m)!=81)
+	tne();
 }
+
+
 void load()
 {   FILE *a;int i,j;
 int c=0,ar[81];char ch;
